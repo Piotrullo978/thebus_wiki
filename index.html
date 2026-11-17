@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REJESTR OBIEKTÓW — Generated Buildings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #09090b;
+      --bg-surface: #111114;
+      --bg-surface-hover: #18181c;
+      --border-color: #222226;
+      --border-hover: #3a3a42;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --pill-active-bg: #ffffff;
+      --pill-active-text: #09090b;
+      --accent-green: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Górny pasek nawigacji */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(9, 9, 11, 0.9);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a.active {
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--text-primary);
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .btn-ai-soon {
+      background-color: #18181b;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: not-allowed;
+    }
+
+    /* Sekcja Hero */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background-color: var(--text-muted);
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      max-width: 540px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+    }
+
+    .stat-box {
+      text-align: right;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Wyszukiwarka i filtry */
+    .controls {
+      margin-bottom: 24px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-input-wrap svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 16px 14px 46px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--border-hover);
+    }
+
+    .sort-select {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0 18px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Pigułki tagów */
+    .tags-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag-pill:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .tag-pill.active {
+      background-color: var(--pill-active-bg);
+      color: var(--pill-active-text);
+      border-color: var(--pill-active-bg);
+    }
+
+    .tag-count {
+      background-color: rgba(255, 255, 255, 0.08);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tag-pill.active .tag-count {
+      background-color: rgba(0, 0, 0, 0.12);
+      color: var(--pill-active-text);
+    }
+
+    .results-info {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .results-info strong {
+      color: var(--text-primary);
+    }
+
+    /* Siatka kart (Discord Forum Style) */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      background-color: var(--bg-surface-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      padding: 14px 16px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .card-author {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .copy-btn {
+      background: #1f1f24;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .copy-btn:hover {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .card-image-wrap {
+      margin: 0 16px;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      background-color: #050507;
+      border: 1px solid #1c1c21;
+      position: relative;
+    }
+
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-footer {
+      padding: 12px 16px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .card-tag {
+      background-color: #1a1a1f;
+      border: 1px solid #2a2a32;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    /* Modal szczegółów (prawa karta ze wzorca) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hover);
+      border-radius: 12px;
+      max-width: 720px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-height: 440px;
+      object-fit: contain;
+      background: #050507;
+      display: block;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .modal-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #09090b;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-close {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .navbar, .container { padding: 20px; }
+      .hero h1 { font-size: 28px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nawigacja -->
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="#" class="active">BAZA MESHÓW</a>
+      <a href="#"><span class="status-dot"></span>GENERATED-BUILDINGS</a>
+    </div>
+    <button class="btn-ai-soon" title="Wkrótce dodamy wyszukiwanie ze Street View">AI STREET VIEW (WKRÓTCE)</button>
+  </nav>
+
+  <div class="container">
+    <!-- Nagłówek -->
+    <header class="hero">
+      <div>
+        <div class="hero-eyebrow">KATALOG ASSETÓW 3D</div>
+        <h1>REJESTR STATIC MESHÓW</h1>
+        <p>Przeglądaj wygenerowane moduły budynków, filtruj po kategoriach architektonicznych i kopiuj nazwy gotowe do użycia w silniku.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box">
+          <div class="stat-label">DOSTĘPNE MESHE</div>
+          <div class="stat-value" id="total-count">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">KATEGORIE</div>
+          <div class="stat-value" id="tags-count">0</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Wyszukiwanie i tagi -->
+    <section class="controls">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input type="text" id="search-input" class="search-input" placeholder="Szukaj po nazwie mesha (np. SM_008), tagu lub opisie...">
+        </div>
+        <select id="sort-select" class="sort-select">
+          <option value="default">Domyślne</option>
+          <option value="az">Nazwa A–Z</option>
+          <option value="za">Nazwa Z–A</option>
+        </select>
+      </div>
+
+      <div class="tags-bar" id="tags-bar">
+        <!-- Generowane dynamicznie z assets.json -->
+      </div>
+
+      <div class="results-info" id="results-info">
+        Ładowanie bazy...
+      </div>
+    </section>
+
+    <!-- Siatka obiektów -->
+    <main class="grid" id="assets-grid"></main>
+  </div>
+
+  <!-- Modal szczegółów -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" onclick="event.stopPropagation()">
+      <img id="modal-img" class="modal-img" src="" alt="">
+      <div class="modal-body">
+        <div class="modal-eyebrow" id="modal-tags-text"></div>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-actions">
+          <button class="btn-primary" id="modal-copy-btn">Kopiuj nazwę mesha</button>
+          <button class="btn-close" id="modal-close-btn">Zamknij</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allAssets = [];
+    let selectedTag = 'Wszystkie';
+    let searchQuery = '';
+    let sortMode = 'default';
+
+    // Placeholder SVG jeśli obrazek nie istnieje jeszcze w folderze /images
+    const fallbackSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375"><rect width="600" height="375" fill="%23111114"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2352525b" font-family="monospace" font-size="16">Brak podglądu w folderze /images</text></svg>`;
+
+    async function init() {
+      try {
+        const res = await fetch('assets.json');
+        allAssets = await res.json();
+        updateStats();
+        renderTags();
+        renderGrid();
+      } catch (err) {
+        document.getElementById('results-info').innerHTML =
+          '<span style="color:#ef4444">Błąd wczytywania assets.json. Uruchom stronę przez serwer lokalny (np. Live Server) lub GitHub Pages.</span>';
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('total-count').textContent = allAssets.length;
+      const uniqueTags = new Set(allAssets.flatMap(a => a.tags));
+      document.getElementById('tags-count').textContent = uniqueTags.size;
+    }
+
+    function renderTags() {
+      const counts = { 'Wszystkie': allAssets.length };
+      allAssets.forEach(asset => {
+        asset.tags.forEach(tag => {
+          counts[tag] = (counts[tag] || 0) + 1;
+        });
+      });
+
+      const tagsBar = document.getElementById('tags-bar');
+      tagsBar.innerHTML = '';
+
+      Object.entries(counts).forEach(([tag, count]) => {
+        const btn = document.createElement('button');
+        btn.className = `tag-pill ${selectedTag === tag ? 'active' : ''}`;
+        btn.innerHTML = `${tag} <span class="tag-count">${count}</span>`;
+        btn.onclick = () => {
+          selectedTag = tag;
+          renderTags();
+          renderGrid();
+        };
+        tagsBar.appendChild(btn);
+      });
+    }
+
+    function renderGrid() {
+      let filtered = allAssets.filter(asset => {
+        const matchesTag = selectedTag === 'Wszystkie' || asset.tags.includes(selectedTag);
+        const q = searchQuery.toLowerCase();
+        const matchesSearch = !q ||
+          asset.name.toLowerCase().includes(q) ||
+          asset.description.toLowerCase().includes(q) ||
+          asset.tags.some(t => t.toLowerCase().includes(q));
+        return matchesTag && matchesSearch;
+      });
+
+      if (sortMode === 'az') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortMode === 'za') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      document.getElementById('results-info').innerHTML =
+        `Wyświetlono <strong>${filtered.length}</strong> z ${allAssets.length} obiektów`;
+
+      const grid = document.getElementById('assets-grid');
+      grid.innerHTML = '';
+
+      filtered.forEach(asset => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.onclick = () => openModal(asset);
+
+        const tagsHtml = asset.tags.map(t => `<span class="card-tag">${t}</span>`).join('');
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <div class="card-meta"><span class="card-author">${asset.author}</span></div>
+              <div class="card-title">${asset.name}</div>
+            </div>
+            <button class="copy-btn" onclick="copyName(event, '${asset.name}', this)">Kopiuj</button>
+          </div>
+          <div class="card-image-wrap">
+            <img src="${asset.image}" alt="${asset.name}" loading="lazy" onerror="this.src='${fallbackSvg}'">
+          </div>
+          <div class="card-footer">
+            ${tagsHtml}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function copyName(e, name, btn) {
+      e.stopPropagation();
+      navigator.clipboard.writeText(name);
+      const original = btn.textContent;
+      btn.textContent = 'Skopiowano!';
+      btn.style.background = '#10b981';
+      btn.style.color = '#000';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 1200);
+    }
+
+    // Modal
+    const backdrop = document.getElementById('modal-backdrop');
+    function openModal(asset) {
+      document.getElementById('modal-img').src = asset.image;
+      document.getElementById('modal-img').onerror = function() { this.src = fallbackSvg; };
+      document.getElementById('modal-tags-text').textContent = asset.tags.join(' • ');
+      document.getElementById('modal-title').textContent = asset.name;
+      document.getElementById('modal-desc').textContent = asset.description;
+
+      const copyBtn = document.getElementById('modal-copy-btn');
+      copyBtn.onclick = (e) => copyName(e, asset.name, copyBtn);
+
+      backdrop.classList.add('open');
+    }
+
+    document.getElementById('modal-close-btn').onclick = () => backdrop.classList.remove('open');
+    backdrop.onclick = () => backdrop.classList.remove('open');
+
+    // Zdarzenia
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderGrid();
+    });
+
+    document.getElementById('sort-select').addEventListener('change', (e) => {
+      sortMode = e.target.value;
+      renderGrid();
+    });
+
+    init();
+  </script>
+</body>
+</html>
